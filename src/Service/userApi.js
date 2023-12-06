@@ -134,3 +134,15 @@ export const Register = (newUser) => {
             })
     })
 }
+
+export const getAvatar = () => {
+    return new Promise((resolve, reject) => {
+        instance.get("/public/getAvatar/" + getUser().id)
+            .then((res) => {
+                resolve(res.data)
+            })
+            .catch((err) => {
+                reject(err)
+            })
+    })
+}

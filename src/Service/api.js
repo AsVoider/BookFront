@@ -117,6 +117,18 @@ export const getBooksContains = (string) => {
     })
 }
 
+export const getAuthorByTitle = (string) => {
+    return new Promise((resolve, reject) => {
+        instance.get('/micro/getAuthors/' + string)
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((err) => {
+                reject(err)
+            })
+    })
+}
+
 export const getBookbyId = async(id) => {
     return new Promise((resolve, reject)=>
     {
@@ -125,7 +137,8 @@ export const getBookbyId = async(id) => {
             resolve(response.data);
         })
             .catch((error)=>{
-                reject(error);
+                alert(error.response.data)
+                //reject(error);
             })
     })
 }
@@ -287,6 +300,18 @@ export const getMy = (str, ed) => {
         })
             .then((res) => {
                 resolve(res.data)
+            })
+            .catch((err) => {
+                reject(err)
+            })
+    })
+}
+
+export const getRelatedBooks = (text) => {
+    return new Promise((resolve, reject) => {
+        instance.get('/public/getRelation/' + text)
+            .then((response) => {
+                resolve(response.data)
             })
             .catch((err) => {
                 reject(err)

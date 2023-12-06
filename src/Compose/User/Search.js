@@ -3,8 +3,9 @@ import {Card, Space, Table, Tag} from "antd";
 import moment from 'moment';
 import Search from "antd/es/input/Search";
 import {Link} from "react-router-dom";
-import {getBooksContains} from "../../Service/api";
+import {getAuthorByTitle, getBooksContains, getRelatedBooks} from "../../Service/api";
 import {getUser} from "../../Service/userApi";
+import Text from "antd/lib/typography/Text";
 
 const column = [
     {
@@ -61,7 +62,11 @@ const column = [
 ]
 const SearchBar = () => {
     const [sear, setSear] = useState("");
+    const [author, setAuthor] = useState("")
     const [book, setBook] = useState([]);
+    const [title, setTitle] = useState("")
+    const [book3, setBook3] = useState([])
+    const [rela, setRela] = ("")
 
     const handleSearch = (text) => {
         console.log(getUser())
@@ -84,12 +89,63 @@ const SearchBar = () => {
         getBooksContain(sear)
     }, [sear])
 
+    const handleSearch2 = (text) => {
+        setAuthor("")
+        if (text === "")
+            setTitle("")
+        else
+            setTitle(text)
+    }
+
+    const getAuthorsByTitle = (text) => {
+        if(text === "")
+            setAuthor("")
+        else
+            getAuthorByTitle(text).then((res) => {
+                setAuthor(res)
+                console.log(res)
+            })
+    }
+
+    useEffect(() => {
+        getAuthorsByTitle(title)
+    }, [title])
+
+    const handleSearch3 = (text) => {
+        setRela("")
+        if (text === "")
+            setRela("")
+        else
+            setRela(text)
+    }
+
+    const getRelated = (text) => {
+        if (text === "")
+            setBook3([])
+        else
+            getRelatedBooks(text).then((res) => {
+                setBook3(res)
+            })
+    }
+
     return (
         <div>
             <Card title="Search Books!">
                 <Space direction={"vertical"} size={"middle"} style={{display:'flex'}}>
                     <Search placeholder="Search Books" onSearch={handleSearch}></Search>
                     <Table columns={column} dataSource={book} pagination={{pageSize: 15}}></Table>
+                </Space>
+            </Card>
+            <Card title={"Search Authors"}>
+                <Space direction={"vertical"} size={"middle"} style={{display: "flex"}}>
+                    <Search placeholder={"Search Authors"} onSearch={handleSearch2}></Search>
+                    <Text>{author !== "" ? "书的作者是: " + author : ""}</Text>
+                </Space>
+            </Card>
+            <Card title="Search related">
+                <Space>
+                    <Search placeholder={"Search Related"} onSearch={handleSearch3}></Search>
+                    <Table columns={column} dataSource={book3} pagination={{pageSize: 15}}></Table>
                 </Space>
             </Card>
         </div>
